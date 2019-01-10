@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>鹿财的聊天室</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        textarea {
+            display: block;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <textarea name="" id="" cols="30" rows="10"></textarea>
+    <input type="text" name="" id="" placeholder="输入你的名字">
+    <button>发送内容</button>
+</body>
+<script src="https://cdn.bootcss.com/socket.io/2.2.0/socket.io.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    // 连接到远程服务器
+    var socket = io.connect('/')
+    $('button').click(() => {
+        let val = $('textarea').val()
+        let user = $('input').val()
+        if (!val) return
+        $('textarea').val('')
+        socket.send({
+            val: val,
+            user: user
+        })  // 向服务端发送信息
+    })
+    // 若果监听到socket消息, 那么执行这个方法里面的回调函数并且得到返回值
+    socket.on('message', function (json) {
+
+        // $('body').append('<p>' + msg + '</p>')
+        $('body').append(`<p>${json.user}:${json.val}</p>`)   //语法模板
+    })
+</script>
+
+</html>
